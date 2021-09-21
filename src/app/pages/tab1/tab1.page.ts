@@ -23,7 +23,7 @@ export class Tab1Page {
         this.dataLocal.guardarRegistro(barcodeData.format, barcodeData.text);
       }
      }).catch(err => {
-         this.dataLocal.guardarRegistro('http', 'http//:as.com');
+         this.dataLocal.guardarRegistro('http', 'https://www.as.com/');
      });
   }
 
