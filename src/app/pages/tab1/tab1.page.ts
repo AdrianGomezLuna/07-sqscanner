@@ -23,7 +23,8 @@ export class Tab1Page {
         this.dataLocal.guardarRegistro(barcodeData.format, barcodeData.text);
       }
      }).catch(err => {
-         this.dataLocal.guardarRegistro('http', 'https://www.as.com/');
+        //  this.dataLocal.guardarRegistro('QR_CODE', 'https://www.as.com/');
+         this.dataLocal.guardarRegistro('QR_CODE', 'geo:40.73151796986687,-74.06087294062502');
      });
   }
 

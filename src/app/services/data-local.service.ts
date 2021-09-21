@@ -30,6 +30,8 @@ export class DataLocalService {
     this.registros.unshift(nuevoRegistro);
     this.storage.set('registros',this.registros);
 
+    console.log(nuevoRegistro);
+
     this.abrirRegistro(nuevoRegistro);
   }
 
@@ -39,6 +41,9 @@ export class DataLocalService {
     switch(registro.type) {
       case 'http':
         this.inAppBrowser.create(registro.text, '_system');
+        break;
+      case 'geo':
+        this.navController.navigateForward(`/tabs/tab2/mapa/${ registro.text}`);
         break;
     }
   }
