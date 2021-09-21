@@ -3,6 +3,7 @@ import { Registro } from '../models/registro.model';
 import { Storage } from '@ionic/storage-angular';
 import { NavController } from '@ionic/angular';
 import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
+import { File } from '@ionic-native/file/ngx';
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +14,8 @@ export class DataLocalService {
 
   constructor(private storage: Storage,
               private navController: NavController,
-              private inAppBrowser: InAppBrowser) {
+              private inAppBrowser: InAppBrowser,
+              private file: File) {
     this.init();
     this.storage.get('registros').then(registros => {
       this.registros = registros || [];
@@ -46,5 +48,36 @@ export class DataLocalService {
         this.navController.navigateForward(`/tabs/tab2/mapa/${ registro.text}`);
         break;
     }
+  }
+
+  enviarCorreo() {
+
+    const arregloTemp = [];
+    const titulos = 'Tipo, Formato, Creado en, Texto\n';
+
+    arregloTemp.push( titulos);
+    this.registros.forEach( registro => {
+      const linea = `${registro.type}, ${registro.format}, ${registro.create}, ${registro.text.replace(',',' ')}\n`;
+
+      arregloTemp.push(linea);
+    });
+
+    this.crearArchivoFisico(arregloTemp.join(''));
+
+  }
+
+  crearArchivoFisico(text: string) {
+    this.file.checkFile(this.file.dataDirectory, 'registros.csv')
+    .then( existe => {
+      console.log('Existe archivo?' , existe);
+      return this.escribirArchivo( text);
+    })
+    .catch(err => this.file.createFile( this.file.dataDirectory, 'registros.csv', false)
+        .then(creado => this.escribirArchivo( text ))
+        .catch(err2 => console.log('NO se pudo crear el archivo', err2 )));
+  }
+
+  async escribirArchivo(texto: string) {
+    await this.file.writeExistingFile(this.file.dataDirectory,'registro.csv', texto);
   }
 }
